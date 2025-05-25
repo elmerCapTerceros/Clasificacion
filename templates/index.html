@@ -1,12 +1,474 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
-    <title>Mi Primera App Flask</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Reciclaje Inteligente</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" media="all" href="static/main.css">
+    <style>
+        :root {
+            --primary-color: #6DBE45;
+            --secondary-color: #ffffff;
+            --background-color: #f5f5f5;
+            --text-color: #333333;
+            --accent-color: #4CAF50;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--background-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        header {
+            background-color: var(--secondary-color);
+            width: 100%;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        header h1 {
+            color: var(--primary-color);
+            font-size: 2rem;
+        }
+
+        .container {
+            background-color: var(--secondary-color);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .container h2 {
+            color: var(--text-color);
+            margin-bottom: 1rem;
+        }
+
+        .container p {
+            color: var(--text-color);
+            margin-bottom: 2rem;
+        }
+
+        input[type="file"] {
+            border: 2px dashed var(--primary-color);
+            border-radius: 8px;
+            padding: 1rem;
+            width: 100%;
+            cursor: pointer;
+            transition: border-color 0.3s;
+            margin-bottom: 1rem;
+        }
+
+        input[type="file"]:hover {
+            border-color: var(--accent-color);
+        }
+
+        .score {
+            margin-top: 1rem;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            display: none;
+        }
+
+        footer {
+            margin-top: 2rem;
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+    </style>
 </head>
+
 <body>
-    <h1>¡Hola desde Flask!</h1>
-    <p>Esta es una página HTML usando Jinja2.</p>
+    <header>
+        <h1>Reciclaje Inteligente</h1>
+    </header>
+
+    <div class="paragraph paragraph-fast-actions paragraph--type--fast-actions paragraph--view-mode--default">
+
+
+        <div class="field-paragraph-fast-actions" style="flex-basis:50%; max-width:50%;">
+
+            <div class="paragraph paragraph-fast-action paragraph--type--fast-action paragraph--view-mode--default">
+                <div class="fast-action-img">
+                    <img src="static/images/Si%20eres%20ciudadano.png">
+                </div>
+                <h3 class="fast-action-title">
+                    <div><span>
+                            Si eres ciudadano
+                        </span>
+                    </div>
+                </h3>
+                <div class="green-line"></div>
+                <div class="fast-action-body">
+
+                    <div>
+                        <p class="text-align-center">Aprende a reducir,
+                            reutilizar y reciclar para cuidar el planeta. Descubre nuestros recursos
+                            y consejos prácticos que te ayudarán a vivir de forma más sostenible.</p>
+                    </div>
+
+                </div>
+                <div class="fast-action-ctas">
+
+                    <div class="field-fast-action-ctas button secondary-button">
+                        <a href="#comienza-ya">Inicia ahora</a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="field-paragraph-fast-actions" style="flex-basis:50%; max-width:50%;">
+
+            <div class="paragraph paragraph-fast-action paragraph--type--fast-action paragraph--view-mode--default">
+                <div class="fast-action-img">
+                    <img src="static/images/Si%20eres%20empresa.png">
+                </div>
+                <h3 class="fast-action-title">
+                    <div><span>
+                            Si eres empresa
+                        </span>
+                    </div>
+                </h3>
+                <div class="green-line"></div>
+                <div class="fast-action-body">
+
+                    <div>
+                        <p class="text-align-center">Haz más fácil el reciclaje
+                            de envases de tu negocio con Ecoembes. Descubre nuestras soluciones a
+                            medida para gestionar residuos y fomentar la economía circular.</p>
+                    </div>
+
+                </div>
+                <div class="fast-action-ctas">
+
+                    <div class="field-fast-action-ctas button secondary-button">
+                        <a href="#comienza-ya">Inicia ahora</a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+
+    <div class="row g-0">
+        <div class="paragraph-title" style="text-align:center;">
+            <h2>
+                <span class="highlighted">El reciclaje</span>: todo lo que debes saber
+            </h2>
+        </div>
+
+        <div class="section-subsections" style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">
+
+            <li class="splide__slide splide__slide--clone is-visible" style="margin-right: 26px; width: 294.667px;"
+                id="splide01-slide06" aria-hidden="false" tabindex="0">
+                <div class="ecoembes-card ">
+                    <div class="ecoembes-card__image">
+                        <img src="static/images/como-funciona-planta_seleccion.png" alt="">
+                    </div>
+                    <div class="ecoembes-card__body">
+                        <a href="https://reducereutilizarecicla.org/plantas-de-seleccion-en-espana/" class="title-url"
+                            target="">
+
+                            <h3 class="ecoembes-card__title">
+                                <span>¿Cómo funciona una planta de selección?</span>
+                            </h3>
+                        </a>
+                        <div class="ecoembes-card__description">
+
+                            <div>
+                                <p>También conocidas como <strong>plantas de clasificación de residuos</strong>, son las
+                                    instalaciones a las que llegan <strong>residuos que depositas en el contenedor de
+                                        amarillo.</strong></p>
+                            </div>
+
+                        </div>
+                        <div class="ecoembes-card__actions">
+
+
+
+
+                            <a href="https://reducereutilizarecicla.org/plantas-de-seleccion-en-espana/"
+                                class="btn btn-icon" target="_blank">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M10 2.5V17.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round"></path>
+                                    <path d="M2.5 10L17.5 10" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                            </a>
+                        </div>
+
+
+                    </div>
+                </div>
+            </li>
+            <li class="splide__slide splide__slide--clone is-visible" style="margin-right: 26px; width: 294.667px;"
+                aria-hidden="false" tabindex="0" id="splide01-slide07">
+                <div class="ecoembes-card ">
+                    <div class="ecoembes-card__image">
+                        <img src="static/images/mas-alla-3R%20(1).png" alt="">
+                    </div>
+                    <div class="ecoembes-card__body">
+                        <a href="https://reducereutilizarecicla.org/las-3rs/" class="title-url" target="">
+
+                            <h3 class="ecoembes-card__title">
+                                <span>Más allá de las 3Rs</span>
+                            </h3>
+                        </a>
+                        <div class="ecoembes-card__description">
+
+                            <div>
+                                <p>Si ya conoces las <strong>3Rs - Reducir, Reutilizar, Reciclar</strong> - y quieres ir
+                                    más allá para <strong>fomentar la economía circular</strong>, ¡amplía tu vocabulario
+                                    sostenible! Conoce las otras 4 y aprovecha al máximo todos los recursos a tu
+                                    alcance.</p>
+                            </div>
+
+                        </div>
+                        <div class="ecoembes-card__actions">
+
+
+
+
+                            <a href="https://reducereutilizarecicla.org/las-3rs/" class="btn btn-icon" target="_blank">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M10 2.5V17.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round"></path>
+                                    <path d="M2.5 10L17.5 10" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                            </a>
+                        </div>
+
+
+                    </div>
+                </div>
+            </li>
+            <li class="splide__slide is-visible" id="splide01-slide05" style="margin-right: 26px; width: 294.667px;"
+                aria-hidden="false" tabindex="0">
+                <div class="ecoembes-card ">
+                    <div class="ecoembes-card__image">
+                        <img src="static/images/cada-residuo-lugar%20(1).png" alt="">
+                    </div>
+                    <div class="ecoembes-card__body">
+                        <a href="https://reducereutilizarecicla.org/contenedores-de-reciclaje/" class="title-url"
+                            target="">
+
+                            <h3 class="ecoembes-card__title">
+                                <span>Cada residuo en su lugar</span>
+                            </h3>
+                        </a>
+                        <div class="ecoembes-card__description">
+
+                            <div>
+                                <p>Separar bien es la clave para que todo el proceso de reciclaje funcione. Te ayudamos
+                                    a <strong>resolver tus dudas acerca de dónde depositar cada residuo</strong> para
+                                    que siempre tengas claro cuál es el contenedor correcto.</p>
+                            </div>
+
+                        </div>
+                        <div class="ecoembes-card__actions">
+
+
+
+
+                            <a href="https://reducereutilizarecicla.org/contenedores-de-reciclaje/" class="btn btn-icon"
+                                target="_blank">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M10 2.5V17.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round"></path>
+                                    <path d="M2.5 10L17.5 10" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                            </a>
+                        </div>
+
+
+                    </div>
+                </div>
+            </li>
+        </div>
+
+    </div>
+
+    </div>
+
+
+    <div class="section-subsections" style="margin-top: 5lh;">
+
+        <div class="subsection" style="width:40lh">
+            <div class="paragraph paragraph-tabs paragraph--type--tabs paragraph--view-mode--default">
+                <div class="tab-container">
+
+
+                    <ul class="nav nav-tabs">
+
+
+
+
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+
+                        <button class="nav-link body-strong mobile-button" type="button"
+                            data-tab-id="reduce-reutiliza-recicla-tab">Reduce Reutiliza Recicla</button>
+
+                        <div class="paragraph paragraph-tab tab-pane fade paragraph--type--tab paragraph--view-mode--default active show"
+                            id="reduce-reutiliza-recicla" role="tabpanel"
+                            aria-labelledby="reduce-reutiliza-recicla-tab">
+                            <div class="left-column">
+                                <h3 class="tab-title">
+
+                                    <div>
+                                        <h3>
+                                            Reduce Reutiliza Recicla
+                                        </h3>
+                                    </div>
+
+                                </h3>
+                                <div class="green-line"></div>
+                                <div class="tab-summary">
+
+                                    <div>
+                                        <p>El site donde fomentamos la sostenibilidad y la
+                                            circularidad de los envases. A través de las 3R - Reducir, Reutilizar,
+                                            Reciclar - minimizamos nuestro consumo y hacemos que los residuos
+                                            vuelvan a ser recursos.</p>
+                                    </div>
+
+                                </div>
+                                <div class="tab-cta-container">
+                                    <a class="plus-button tab-cta" href="https://reducereutilizarecicla.org/"
+                                        target="_blank">
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="right-column">
+                                <div class="tab-image">
+                                    <img src="static/images/Mask%20Group%20(6).png">
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <button class="nav-link body-strong mobile-button" type="button"
+                            data-tab-id="ecoembes-empleo-tab">Ecoembes Empleo</button>
+
+                        <div class="paragraph paragraph-tab tab-pane fade paragraph--type--tab paragraph--view-mode--default"
+                            id="ecoembes-empleo" role="tabpanel" aria-labelledby="ecoembes-empleo-tab">
+                            <div class="left-column">
+                                <h3 class="tab-title">
+
+                                    <div>
+                                        <h3>
+                                            Ecoembes Empleo
+                                        </h3>
+                                    </div>
+
+                                </h3>
+                                <div class="green-line"></div>
+                                <div class="tab-summary">
+
+                                    <div>
+                                        <p><span><span><span><span><span>El espacio en el que encontrarás ofertas,
+                                                                consejos para disfrutar de un entorno laboral de calidad
+                                                                y mucho más.</span></span></span></span></span></p>
+                                    </div>
+
+                                </div>
+                                <div class="tab-cta-container">
+                                    <a class="plus-button tab-cta" href="https://ecoembesempleo.es/" target="_blank">
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="right-column">
+                                <div class="tab-image">
+                                    <img src="static/images/task_empleo.png">
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <button class="nav-link body-strong mobile-button" type="button"
+                            data-tab-id="portal-transparencia-tab">Portal de transparencia</button>
+
+                        <div class="paragraph paragraph-tab tab-pane fade paragraph--type--tab paragraph--view-mode--default"
+                            id="portal-transparencia" role="tabpanel" aria-labelledby="portal-transparencia-tab">
+                            <div class="left-column">
+                                <h3 class="tab-title">
+
+                                    <div>
+                                        <h3>
+                                            Portal de transparencia
+                                        </h3>
+                                    </div>
+
+                                </h3>
+                                <div class="green-line"></div>
+                                <div class="tab-summary">
+
+                                    <div>
+                                        <p>Nuestra web en la te explicamos en detalle la
+                                            actividad&nbsp;de&nbsp;Ecoembes. Una actividad que tiene como objetivo
+                                            contribuir a reducir el impacto ambiental de los residuos de envases.</p>
+                                    </div>
+
+                                </div>
+                                <div class="tab-cta-container">
+                                    <a class="plus-button tab-cta" href="https://www.ecoembestransparencia.com/"
+                                        target="_blank">
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="right-column">
+                                <div class="tab-image">
+                                    <img src="static/images/portal-transparencia.png">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <section id="comienza-ya" style="margin: 2lh;">
+        <div class="container">
+            <h2>Sube tu foto</h2>
+            <p>Analiza tu residuo y obtén un puntaje ecológico</p>
+            <input type="file" accept="image/*">
+            <div class="score">Puntaje: 0</div>
+        </div>
+        <footer>
+            &copy; 2025 Reciclaje Inteligente
+        </footer>
+    </section>
 </body>
+
 </html>

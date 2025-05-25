@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Reciclaje - Puntuación de Imagen</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #4CAF50;
+      --background-color: #f9f9f9;
+      --container-color: #ffffff;
+      --text-color: #333333;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: var(--background-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      background-color: var(--container-color);
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      padding: 2rem;
+      width: 350px;
+      text-align: center;
+      transition: transform 0.3s;
+    }
+
+    .container:hover {
+      transform: translateY(-5px);
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      color: var(--primary-color);
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      color: var(--text-color);
+      margin-bottom: 1.5rem;
+    }
+
+    input[type="file"] {
+      display: block;
+      margin: 0 auto 1rem auto;
+      border: 2px dashed var(--primary-color);
+      border-radius: 8px;
+      padding: 1rem;
+      cursor: pointer;
+      width: 100%;
+      transition: border-color 0.3s;
+    }
+
+    input[type="file"]:hover {
+      border-color: #388E3C;
+    }
+
+    .score {
+      margin-top: 1rem;
+      font-size: 1.5rem;
+      color: var(--primary-color);
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Reciclaje</h1>
+    <p>Sube tu foto y obtén tu puntaje ecológico</p>
+    <input type="file" accept="image/*">
+    <div class="score">Puntaje: 0</div>
+  </div>
+</body>
+</html>
