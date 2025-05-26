@@ -2,11 +2,163 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Mi Primera App Flask</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basurero Inteligente - EcoRewards</title>
+    <link rel="stylesheet" href="../static/style.css">
 </head>
 <body>
-    <h1>¡Hola desde Flask!</h1>
-    <p>Esta es una página HTML usando Jinja2.</p>
+    <div class="container">
+        <div class="header">
+            <h1>EcoParque - Basurero Inteligente</h1>
+            <p>Recicla tus residuos y gana descuentos en tus impuestos municipales y supermercados</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3 id="totalImages">0</h3>
+                <p>Reciduos Reciclados</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="totalPoints">0</h3>
+                <p>Puntos</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="discountPercent">0%</h3>
+                <p>Descuento Acumulado</p>
+            </div>
+        </div>
+
+        <div class="upload-section">
+            <h2>📸 Sube tus Imágenes de Residuos</h2>
+            <p>Selecciona múltiples imágenes para clasificar automáticamente</p>
+            <input type="file" id="imageInput" accept="image/*" multiple style="display: none;">
+            <button class="upload-btn" onclick="document.getElementById('imageInput').click()">
+                📷 Seleccionar Imágenes
+            </button>
+            <button class="process-btn" id="processBtn" onclick="processImages()" disabled>
+                 Clasificar Residuos
+            </button>
+            <div id="imageCounter" style="margin-top: 10px; color: #7f8c8d; font-size: 0.9rem;"></div>
+        </div>
+
+        <div id="imagesPreview" class="images-preview"></div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Clasificando residuos</p>
+        </div>
+
+        <div id="resultsSection" class="results-section hidden">
+            <h2>📊 Resultados de Clasificación</h2>
+            <div class="discount-info">
+                <div class="discount-card">
+                    <h3>Cartón</h3>
+                    <p id="cartonCount">0 items</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="cartonProgress" style="width: 0%"></div>
+                    </div>
+                    <p>+5 puntos por item</p>
+                </div>
+                <div class="discount-card">
+                    <h3>Vidrio</h3>
+                    <p id="vidrioCount">0 items</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="vidrioProgress" style="width: 0%"></div>
+                    </div>
+                    <p>+10 puntos por item</p>
+                </div>
+                <div class="discount-card">
+                    <h3>Metal</h3>
+                    <p id="metalCount">0 items</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="metalProgress" style="width: 0%"></div>
+                    </div>
+                    <p>+15 puntos por item</p>
+                </div>
+                <div class="discount-card">
+                    <h3>Papel</h3>
+                    <p id="papelCount">0 items</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="papelProgress" style="width: 0%"></div>
+                    </div>
+                    <p>+2 puntos por item</p>
+                </div>
+                <div class="discount-card">
+                    <h3>Plástico</h3>
+                    <p id="plasticoCount">0 items</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="plasticoProgress" style="width: 0%"></div>
+                    </div>
+                    <p>+2 puntos por item</p>
+                </div>
+                <div class="discount-card">
+                    <h3>No Reciclable</h3>
+                    <p id="noRecCount">0 items</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="noRecProgress" style="width: 0%"></div>
+                    </div>
+                    <p>0.05 ctvs puntos por item</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de canje - Mejor ubicada dentro del container -->
+        <div class="redeem-section">
+            <button class="redeem-btn" id="canjeBtn">
+                🎁 Canjear Puntos
+            </button>
+            <p class="redeem-info">Usa tus puntos para obtener descuentos exclusivos</p>
+        </div>
+    </div>
+
+    <!-- Modal de canje -->
+    <div id="redeemModal" class="modal" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
+        <div class="modal-overlay" id="modalOverlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">🎁 Opciones de Canje</h2>
+                <button class="close" id="closeRedeemModal" aria-label="Cerrar modal" type="button">
+                    &times;
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="options-grid">
+                    <div class="option-card" data-option="auto" role="button" tabindex="0">
+                        <span class="option-icon">🚗</span>
+                        <div class="option-title">Descuento en Impuesto de Auto</div>
+                        <div class="option-description">Reduce hasta un 30% en el pago de tu impuesto vehicular anual</div>
+                        <div class="option-points">Costo: 100 puntos</div>
+                    </div>
+                    
+                    <div class="option-card" data-option="inmueble" role="button" tabindex="0">
+                        <span class="option-icon">🏠</span>
+                        <div class="option-title">Descuento en Bien Inmueble</div>
+                        <div class="option-description">Aprovecha hasta 25% de descuento en impuestos prediales</div>
+                        <div class="option-points">Costo: 150 puntos</div>
+                    </div>
+                    
+                    <div class="option-card" data-option="supermercado" role="button" tabindex="0">
+                        <span class="option-icon">🛒</span>
+                        <div class="option-title">Descuento en Supermercado</div>
+                        <div class="option-description">Cupones de descuento del 15% para tus compras mensuales</div>
+                        <div class="option-points">Costo: 75 puntos</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelBtn" type="button">Cancelar</button>
+                <button class="btn btn-primary" id="confirmBtn" type="button" disabled>Confirmar Canje</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notificación -->
+    <div id="notification" class="notification" role="alert" aria-live="polite">
+        ¡Canje realizado exitosamente! 🎉
+    </div>
+
+    <script src="../static/app.js"></script>
 </body>
 </html>
