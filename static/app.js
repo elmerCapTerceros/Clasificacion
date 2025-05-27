@@ -3,17 +3,21 @@
 =========================================== */
 let selectedImages = [];
 let classificationResults = [];
-let totalPoints = parseInt(localStorage.getItem('totalPoints') || '0');
+let totalPoints = parseFloat(localStorage.getItem('totalPoints') || '0');
 let processedImages = parseInt(localStorage.getItem('processedImages') || '0');
+// Para las donaciones
+let totalDonations = parseFloat(localStorage.getItem('totalDonations') || '0');
+// Para el descuento disponible (se resetea después de canjear)
+let availableDiscount = parseFloat(localStorage.getItem('availableDiscount') || '0');
 
 // Categorías de residuos y sus puntos
 const categories = {
-    'Carton': { name: 'Cartón', points: 10, color: 'Carton' },
-    'Vidrio': { name: 'Vidrio', points: 10, color: 'Vidrio' },
-    'Metal': { name: 'Metal', points: 10, color: 'Metal' },
-    'Papel': { name: 'Papel', points: 10, color: 'Papel' },
-    'Plastico': { name: 'Plástico', points: 10, color: 'Plastico' },
-    'No Reciclable': { name: 'No Reciclable', points: 1, color: 'No Reciclable' }
+    'Carton': { name: 'Cartón', points: 0.05, color: 'Carton' },
+    'Vidrio': { name: 'Vidrio', points: 0.10, color: 'Vidrio' },
+    'Metal': { name: 'Metal', points: 0.15, color: 'Metal' },
+    'Papel': { name: 'Papel', points: 0.03, color: 'Papel' },
+    'Plastico': { name: 'Plástico', points: 0.06, color: 'Plastico' },
+    'No Reciclable': { name: 'No Reciclable', points: 0.01, color: 'No Reciclable' }
 };
 
 /* ===========================================
@@ -47,9 +51,31 @@ function setupEventListeners() {
  */
 function loadStats() {
     document.getElementById('totalImages').textContent = processedImages;
-    document.getElementById('totalPoints').textContent = totalPoints;
-    updateDiscountInfo();
-    console.log(`📊 Estadísticas cargadas: ${processedImages} imágenes, ${totalPoints} puntos`);
+    // Mostrar donaciones en lugar de puntos totales
+    updateDonationDisplay();
+    // Mostrar descuento disponible
+    updateDiscountDisplay();
+    console.log(`📊 Estadísticas cargadas: ${processedImages} imágenes, ${totalDonations} donaciones, ${availableDiscount} descuento disponible`);
+}
+
+/**
+ * Actualiza el display de donaciones
+ */
+function updateDonationDisplay() {
+    const donationElement = document.getElementById('totalPoints'); // Reutilizamos este elemento
+    if (donationElement) {
+        donationElement.textContent = totalDonations.toFixed(2);
+    }
+}
+
+/**
+ * Actualiza el display de descuento disponible
+ */
+function updateDiscountDisplay() {
+    const discountElement = document.getElementById('discountPercent'); // Reutilizamos este elemento
+    if (discountElement) {
+        discountElement.textContent = availableDiscount.toFixed(2) + ' Bs';
+    }
 }
 
 /* ===========================================
@@ -93,7 +119,6 @@ function handleImageSelection(e) {
         }
     });
 }
-
 
 /**
  * Muestra el preview de las imágenes seleccionadas
@@ -141,7 +166,6 @@ function truncateFileName(fileName, maxLength) {
     return `${truncatedName}.${extension}`;
 }
 
-
 /* ===========================================
    FUNCIONES DE CLASIFICACIÓN
 =========================================== */
@@ -188,9 +212,9 @@ async function processImages() {
         await processFallbackIndividual();
     } finally {
         setProcessingState(false);
+        document.getElementById('processBtn').disabled = true;
     }
 }
-
 
 /**
  * Procesa todas las imágenes en un solo request (método principal)
@@ -249,7 +273,6 @@ async function processBatchImages() {
     }
 }
 
-
 /**
  * Procesamiento individual como respaldo en caso de error del batch
  */
@@ -265,9 +288,9 @@ async function processFallbackIndividual() {
             console.error(`❌ Error procesando imagen ${i + 1}:`, error);
             // Usar clasificación de respaldo en caso de error
             const fallbackResult = {
-                category: 'general',
+                category: 'No Reciclable',
                 confidence: 0,
-                points: categories['general'].points,
+                points: categories['No Reciclable'].points,
                 imageIndex: i,
                 error: true
             };
@@ -346,7 +369,7 @@ function mapModelResultToCategory(modelResult) {
         'No Reciclable': 'No Reciclable'
     };
     
-    return mapping[modelResult] || null;
+    return mapping[modelResult] || 'No Reciclable';
 }
 
 /**
@@ -371,7 +394,7 @@ function displayIndividualResult(index, result) {
                 <strong>${categories[result.category].name}</strong><br>
                 ${result.originalPrediction ? `(${result.originalPrediction})` : ''}<br>
                 Confianza: ${result.confidence.toFixed(1)}%<br>
-                +${categories[result.category].points} puntos
+                +${categories[result.category].points} bs
             `;
         }
     }
@@ -494,12 +517,13 @@ function updateProgressBars(counts) {
 function updateGlobalStats(newPoints) {
     totalPoints += newPoints;
     processedImages += selectedImages.length;
+    // Agregar los nuevos puntos al descuento disponible
+    availableDiscount += newPoints;
     
     document.getElementById('totalImages').textContent = processedImages;
-    document.getElementById('totalPoints').textContent = totalPoints;
-    updateDiscountInfo();
-    
-    console.log(`📈 Estadísticas actualizadas: +${newPoints} puntos, ${selectedImages.length} imágenes procesadas`);
+    updateDonationDisplay();
+    updateDiscountDisplay();
+    console.log(`📈 Estadísticas actualizadas: +${newPoints} puntos, ${selectedImages.length} imágenes procesadas, descuento disponible: ${availableDiscount}`);
 }
 
 /**
@@ -508,14 +532,8 @@ function updateGlobalStats(newPoints) {
 function saveStatsToStorage() {
     localStorage.setItem('totalPoints', totalPoints.toString());
     localStorage.setItem('processedImages', processedImages.toString());
-}
-
-/**
- * Actualiza la información de descuentos
- */
-function updateDiscountInfo() {
-    const discountPercent = Math.min(Math.floor(totalPoints / 10), 50); // Máximo 50% descuento
-    document.getElementById('discountPercent').textContent = `${discountPercent}%`;
+    localStorage.setItem('totalDonations', totalDonations.toString());
+    localStorage.setItem('availableDiscount', availableDiscount.toString());
 }
 
 /* ===========================================
@@ -611,7 +629,6 @@ function useCoupon(code) {
     navigator.clipboard?.writeText(code);
 }
 
-//EJt
 function initializeModal() {
     let selectedOption = null;
 
@@ -651,9 +668,9 @@ function initializeModal() {
 
     // Abrir modal
     openBtn.addEventListener('click', () => {
-        // Verificar si tiene suficientes puntos
-        if (totalPoints < 75) {
-            showNotification('❌ Necesitas al menos 75 puntos para canjear');
+        // Verificar si tiene descuento disponible para canjear
+        if (availableDiscount < 0.00) { // Mínimo 0.50 Bs para canjear
+            showNotification('❌ Necesitas al menos 0.50 Bs de descuento acumulado para canjear');
             return;
         }
         
@@ -691,11 +708,11 @@ function initializeModal() {
 
     // Función para seleccionar opción
     function selectOption(card) {
-        const requiredPoints = getRequiredPoints(card.dataset.option);
+        const requiredAmount = getRequiredAmount(card.dataset.option);
         
-        // Verificar si tiene suficientes puntos para esta opción
-        if (totalPoints < requiredPoints) {
-            showNotification(`❌ Necesitas ${requiredPoints} puntos para esta opción`);
+        // Verificar si tiene suficiente descuento disponible para esta opción
+        if (availableDiscount < requiredAmount) {
+            showNotification(`❌ Necesitas ${requiredAmount} Bs de descuento para esta opción`);
             return;
         }
 
@@ -708,18 +725,42 @@ function initializeModal() {
     // Confirmar opción seleccionada
     confirmBtn.addEventListener('click', () => {
         if (selectedOption) {
-            const requiredPoints = getRequiredPoints(selectedOption);
+            const requiredAmount = getRequiredAmount(selectedOption);
             const optionName = getOptionName(selectedOption);
             
-            // Descontar puntos
-            totalPoints -= requiredPoints;
-            updateGlobalStatsDisplay();
+            if (selectedOption === 'donacion') {
+                // Si elige donar, transferir el descuento disponible a donaciones
+                totalDonations += availableDiscount;
+                showNotification(`🎉 ¡Donación realizada exitosamente! (+${availableDiscount.toFixed(2)} Bs donados)`);
+                console.log(`✅ Donación realizada: +${availableDiscount.toFixed(2)} Bs, total donaciones: ${totalDonations}`);
+            } else {
+                // Para otras opciones, usar el descuento
+                showNotification(`🎉 ¡${optionName} canjeado exitosamente! (-${requiredAmount.toFixed(2)} Bs)`);
+                console.log(`✅ Canje realizado: ${optionName}, descuento usado: ${requiredAmount}`);
+            }
+            
+            // Resetear el descuento disponible a cero después de cualquier canje
+            availableDiscount = 0;
+            
+            updateDonationDisplay();
+            updateDiscountDisplay();
             saveStatsToStorage();
             
             closeModal();
-            showNotification(`🎉 ¡${optionName} canjeado exitosamente! (-${requiredPoints} puntos)`);
-            
-            console.log(`✅ Canje realizado: ${optionName}, puntos restantes: ${totalPoints}`);
+
+            //-----
+            // Limpiar imágenes y resultados después de canje o donación
+            selectedImages = [];
+            classificationResults = [];
+
+            const previewContainer = document.getElementById('imagesPreview');
+            if (previewContainer) {
+             previewContainer.innerHTML = '';
+            }
+
+// Ocultar sección de resultados si es necesario
+document.getElementById('resultsSection')?.classList.add('hidden');
+            //
         }
     });
 
@@ -731,20 +772,22 @@ function initializeModal() {
     });
 
     // Funciones auxiliares
-    function getRequiredPoints(option) {
-        const pointsMap = {
-            'auto': 100,
-            'inmueble': 150,
-            'supermercado': 75
+    function getRequiredAmount(option) {
+        const amountMap = {
+            'auto': 0.01,
+            'inmueble': 0.01,
+            'supermercado': 0.01,
+            'donacion': 0.01 // Mínimo para donar
         };
-        return pointsMap[option] || 0;
+        return amountMap[option] || 0;
     }
 
     function getOptionName(option) {
         const nameMap = {
             'auto': 'Descuento en Impuesto de Auto',
             'inmueble': 'Descuento en Bien Inmueble',
-            'supermercado': 'Descuento en Supermercado'
+            'supermercado': 'Descuento en Supermercado',
+            'donacion': 'Donación Realizada'
         };
         return nameMap[option] || 'Opción desconocida';
     }
@@ -752,8 +795,8 @@ function initializeModal() {
 
 function updateGlobalStatsDisplay() {
     document.getElementById('totalImages').textContent = processedImages;
-    document.getElementById('totalPoints').textContent = totalPoints;
-    updateDiscountInfo();
+    updateDonationDisplay();
+    updateDiscountDisplay();
 }
 
 // Inicializar la aplicación cuando se carga la página

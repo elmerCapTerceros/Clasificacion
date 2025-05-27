@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Basurero Inteligente - EcoRewards</title>
-    <link rel="stylesheet" href="../static/style.css">
+    <link rel="stylesheet" href="../static/styles.css">
 </head>
 <body>
     <div class="container">
@@ -20,11 +20,11 @@
             </div>
             <div class="stat-card">
                 <h3 id="totalPoints">0</h3>
-                <p>Puntos</p>
+                <p>Bs. Donados Pro Reforestación</p>
             </div>
             <div class="stat-card">
                 <h3 id="discountPercent">0%</h3>
-                <p>Descuento Acumulado</p>
+                <p>Tu Descuento Actual</p>
             </div>
         </div>
 
@@ -97,7 +97,7 @@
                     <div class="progress-bar">
                         <div class="progress-fill" id="noRecProgress" style="width: 0%"></div>
                     </div>
-                    <p>0.05 ctvs puntos por item</p>
+                    <p>0.05bs por item</p>
                 </div>
             </div>
         </div>
@@ -105,7 +105,7 @@
         <!-- Sección de canje - Mejor ubicada dentro del container -->
         <div class="redeem-section">
             <button class="redeem-btn" id="canjeBtn">
-                🎁 Canjear Puntos
+                Canjear
             </button>
             <p class="redeem-info">Usa tus puntos para obtener descuentos exclusivos</p>
         </div>
@@ -125,24 +125,31 @@
             <div class="modal-body">
                 <div class="options-grid">
                     <div class="option-card" data-option="auto" role="button" tabindex="0">
-                        <span class="option-icon">🚗</span>
-                        <div class="option-title">Descuento en Impuesto de Auto</div>
+                         <img class="option-icon" src="/static/img/Auto.png" alt="autoIcon" width="50" height="50">
+                        <div class="option-title">Descuento en Pago de Impuesto Vehicular</div>
                         <div class="option-description">Reduce hasta un 30% en el pago de tu impuesto vehicular anual</div>
-                        <div class="option-points">Costo: 100 puntos</div>
+                       <!--- <div class="option-points">Costo: 100 puntos</div>-->
                     </div>
                     
                     <div class="option-card" data-option="inmueble" role="button" tabindex="0">
-                        <span class="option-icon">🏠</span>
-                        <div class="option-title">Descuento en Bien Inmueble</div>
+                        <img class="option-icon" src="/static/img/casa.png" alt="autoIcon" width="50" height="50">
+                        <div class="option-title">Descuento en Pago de Bien Inmueble</div>
                         <div class="option-description">Aprovecha hasta 25% de descuento en impuestos prediales</div>
-                        <div class="option-points">Costo: 150 puntos</div>
+                        <!--- <div class="option-points">Costo: 100 puntos</div>-->
                     </div>
                     
                     <div class="option-card" data-option="supermercado" role="button" tabindex="0">
-                        <span class="option-icon">🛒</span>
-                        <div class="option-title">Descuento en Supermercado</div>
+                        <img class="option-icon" src="/static/img/hipermaxi.png" alt="autoIcon" width="85" height="50">
+                        <div class="option-title">Descuento en Compras</div>
                         <div class="option-description">Cupones de descuento del 15% para tus compras mensuales</div>
-                        <div class="option-points">Costo: 75 puntos</div>
+                        <!--- <div class="option-points">Costo: 100 puntos</div>-->
+                    </div>
+
+                    <div class="option-card" data-option="donacion" role="button" tabindex="0">
+                         <img class="option-icon" src="/static/img/arboles.png" alt="autoIcon" width="50" height="50">
+                        <div class="option-title">Tu Aporte, un Árbol Más</div>
+                        <div class="option-description">Cupones de descuento del 15% para tus compras mensuales</div>
+                        <!--- <div class="option-points">Costo: 100 puntos</div>-->
                     </div>
                 </div>
             </div>

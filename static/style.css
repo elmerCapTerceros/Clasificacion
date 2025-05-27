@@ -9,7 +9,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(#7fffd4);
+            background: linear-gradient(#472678);
             min-height: 100vh;
             padding: 20px;
         }
@@ -39,14 +39,14 @@
             color: #2c3e50;
             font-size: 2.5rem;
             margin-bottom: 10px;
-            background: linear-gradient(45deg, #27ae60, #2ecc71);
+            background: linear-gradient(45deg,#941545);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
         .header p {
-            color: #7f8c8d;
+            color: #941545;
             font-size: 1.1rem;
         }
 
@@ -61,7 +61,7 @@
         }
 
         .stat-card {
-            background: linear-gradient(135deg, #4CAF50, #45a049);
+            background: linear-gradient(135deg,#4b2c78);
             color: white;
             padding: 20px;
             border-radius: 15px;
@@ -356,7 +356,7 @@
            SECCIÓN DE CANJE - NUEVO
         =========================================== */
         .redeem-section {
-            background: linear-gradient(#d47fff);
+            background: linear-gradient(#3cc3e0);
             border-radius: 15px;
             padding: 25px;
             margin-top: 30px;
@@ -365,7 +365,7 @@
         }
 
         .redeem-btn {
-            background: linear-gradient(135deg, #4CAF50, #45a049);
+            background: linear-gradient(135deg,#4b2c78);
             color: white;
             border: none;
             padding: 18px 40px;
